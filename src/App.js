@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import TodoList from "./components/TodoList";
+import TodoItem from "./components/TodoItem";
+import useInput from "./hooks/useInput";
+
 const Layout = styled.div`
   margin: 0 auto;
   max-width: 375px;
@@ -9,36 +13,13 @@ const Title = styled.h1`
   text-align: center;
 `;
 
-const TodoList = styled.ul`
-  margin: 0;
-  padding: 0;
-  & li {
-    list-style: none;
-  }
-`;
-
-const Item = styled.li`
-  ${(props) => props.done && "text-decoration: line-through;"}
-`;
-
-const TodoItem = function ({ id, title, done, toggle, remove }) {
-  const _id = `todo-${id}`;
-  return (
-    <Item done={done}>
-      <input
-        type="checkbox"
-        id={_id}
-        checked={done}
-        onChange={() => toggle(id)}
-      />
-      <label htmlFor={_id}>{title}</label>
-      <button onClick={() => remove(id)}>X</button>
-    </Item>
-  );
-};
-
 function App() {
-  const [title, setTitle] = useState("");
+  const {
+    state: title,
+    setState: setTitle,
+    onChange: onChangeTitle,
+  } = useInput("");
+
   const [list, setList] = useState([
     { id: 1, title: "리액트 공부하기", done: false },
     { id: 2, title: "회사 가기", done: true },
@@ -63,10 +44,6 @@ function App() {
 
   const remove = (id) => {
     setList([...list.filter((item) => item.id !== id)]);
-  };
-
-  const onChangeTitle = (e) => {
-    setTitle(e.target.value);
   };
 
   const onEnterInput = (e) => {
